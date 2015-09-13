@@ -25,7 +25,6 @@ module UglyTrivia
 
     def add(player_name)
       @players.push player_name
-      @places[how_many_players] = 0
       @purses[how_many_players] = 0
       @in_penalty_box[how_many_players] = false
 
@@ -73,8 +72,7 @@ module UglyTrivia
     end
 
     def change_category(player, roll)
-      @places[@current_player] = @places[@current_player] + roll
-      @places[@current_player] = @places[@current_player] - 12 if @places[@current_player] > 11
+      @places[@current_player] = (@places[@current_player] + roll) % 12
 
       puts "#{@players[@current_player]}'s new location is #{@places[@current_player]}"
         puts "The category is #{current_category.to_s.capitalize}"
