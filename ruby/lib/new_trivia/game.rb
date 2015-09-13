@@ -6,17 +6,10 @@ module UglyTrivia
       @purses = Array.new(6, 0)
       @in_penalty_box = Array.new(6, 0)
 
-      @questions = { :pop => [], :science => [], :sports => [], :rock => []}
+      @questions = QuestionStack.new([:pop, :science, :sports, :rock], 50)
 
       @current_player = 0
       @is_getting_out_of_penalty_box = false
-
-      50.times do |i|
-        @questions[:pop].push "Pop Question #{i}"
-        @questions[:science].push "Science Question #{i}"
-        @questions[:sports].push "Sports Question #{i}"
-        @questions[:rock].push "Rock Question #{i}"
-      end
     end
 
     def is_playable?
@@ -64,18 +57,18 @@ module UglyTrivia
   private
 
     def ask_question
-      puts @questions[current_category].shift
+      puts @questions.ask(current_category)
     end
 
     def current_category
-      [:pop, :science, :sports, :rock][@places[@current_player] % 4]
+      @places[@current_player]
     end
 
     def change_category(player, roll)
-      @places[@current_player] = (@places[@current_player] + roll) % 12
+      @places[@current_player] = @questions.change_category(current_category, roll)
 
-      puts "#{@players[@current_player]}'s new location is #{@places[@current_player]}"
-      puts "The category is #{current_category.to_s.capitalize}"
+      puts "#{@players[@current_player]}'s new location is #{current_category}"
+      puts "The category is #{@questions.get_category(current_category)}"
     end
 
   public
@@ -126,6 +119,41 @@ module UglyTrivia
 
     def did_player_win
       !(@purses[@current_player] == 6)
+    end
+  end
+
+  class QuestionStack
+    def initialize(categories, nb)
+      @categories = {}
+      categories.each do |c|
+        @categories[c] = []
+      end
+      nb.times do |i|
+        categories.each do |c|
+          @categories[c].push "#{category_to_s(c)} Question #{i}"
+        end
+      end
+    end
+
+    def ask(place)
+      @categories[category(place)].shift
+    end
+
+    def category(place)
+      @categories.keys[place % @categories.size]
+    end
+
+    def change_category(place, roll)
+      (place + roll) % (@categories.size * 3)
+    end
+
+    def get_category(index)
+      category_to_s(category(index))
+    end
+
+    private
+    def category_to_s(sym)
+      sym.to_s.capitalize
     end
   end
 end
