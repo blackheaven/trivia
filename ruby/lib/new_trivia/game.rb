@@ -6,19 +6,16 @@ module UglyTrivia
       @purses = Array.new(6, 0)
       @in_penalty_box = Array.new(6, 0)
 
-      @pop_questions = []
-      @science_questions = []
-      @sports_questions = []
-      @rock_questions = []
+      @questions = { :pop => [], :science => [], :sports => [], :rock => []}
 
       @current_player = 0
       @is_getting_out_of_penalty_box = false
 
       50.times do |i|
-        @pop_questions.push "Pop Question #{i}"
-        @science_questions.push "Science Question #{i}"
-        @sports_questions.push "Sports Question #{i}"
-        @rock_questions.push "Rock Question #{i}"
+        @questions[:pop].push "Pop Question #{i}"
+        @questions[:science].push "Science Question #{i}"
+        @questions[:sports].push "Sports Question #{i}"
+        @questions[:rock].push "Rock Question #{i}"
       end
     end
 
@@ -52,7 +49,6 @@ module UglyTrivia
 
           puts "#{@players[@current_player]} is getting out of the penalty box"
           change_category(@current_player, roll)
-          puts "The category is #{current_category}"
           ask_question
         else
           puts "#{@players[@current_player]} is not getting out of the penalty box"
@@ -62,7 +58,6 @@ module UglyTrivia
       else
 
         change_category(@current_player, roll)
-        puts "The category is #{current_category}"
         ask_question
       end
     end
@@ -70,14 +65,11 @@ module UglyTrivia
   private
 
     def ask_question
-      puts @pop_questions.shift if current_category == 'Pop'
-      puts @science_questions.shift if current_category == 'Science'
-      puts @sports_questions.shift if current_category == 'Sports'
-      puts @rock_questions.shift if current_category == 'Rock'
+      puts @questions[current_category].shift
     end
 
     def current_category
-      {0 => 'Pop', 1 => 'Science', 2 => 'Sports', 3 => 'Rock'}[@places[@current_player] % 4]
+      [:pop, :science, :sports, :rock][@places[@current_player] % 4]
     end
 
     def change_category(player, roll)
@@ -85,6 +77,7 @@ module UglyTrivia
       @places[@current_player] = @places[@current_player] - 12 if @places[@current_player] > 11
 
       puts "#{@players[@current_player]}'s new location is #{@places[@current_player]}"
+        puts "The category is #{current_category.to_s.capitalize}"
     end
 
   public
