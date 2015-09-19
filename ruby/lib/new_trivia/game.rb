@@ -2,8 +2,6 @@ module UglyTrivia
   class Game
     def  initialize
       @players = []
-      @places = Array.new(6, 0)
-
       @questions = QuestionStack.new([:pop, :science, :sports, :rock], 50)
 
       @current_player = 0
@@ -55,18 +53,14 @@ module UglyTrivia
   private
 
     def ask_question
-      puts @questions.ask(current_category)
-    end
-
-    def current_category
-      @places[@current_player]
+      puts @questions.ask(player.category)
     end
 
     def change_category(roll)
-      @places[@current_player] = @questions.change_category(current_category, roll)
+      player.change_category(@questions, roll)
 
-      puts "#{player.name}'s new location is #{current_category}"
-      puts "The category is #{@questions.get_category(current_category)}"
+      puts "#{player.name}'s new location is #{player.category}"
+      puts "The category is #{@questions.get_category(player.category)}"
     end
 
   public
@@ -153,12 +147,13 @@ module UglyTrivia
   end
 
   class Player
-    attr_reader :name, :in_penalty_box, :purse
+    attr_reader :name, :in_penalty_box, :purse, :category
 
     def initialize(n, penalty)
       @name = n
       @in_penalty_box = penalty
       @purse = 0
+      @category = 0
     end
 
     def go_in_penalty_box
@@ -171,6 +166,10 @@ module UglyTrivia
 
     def win?
       !(@purse == 6)
+    end
+
+    def change_category(questions, roll)
+      @category = questions.change_category(@category, roll)
     end
   end
 end
