@@ -17,7 +17,7 @@ module UglyTrivia
     end
 
     def add(player_name)
-      @players.push player_name
+      @players.push Player.new(player_name)
       @purses[how_many_players] = 0
       @in_penalty_box[how_many_players] = false
 
@@ -151,6 +151,18 @@ module UglyTrivia
     private
     def category_to_s(sym)
       sym.to_s.capitalize
+    end
+  end
+
+  class Player
+    attr_reader :name
+
+    def initialize(n)
+      @name = n
+    end
+
+    def to_s
+      name
     end
   end
 end
