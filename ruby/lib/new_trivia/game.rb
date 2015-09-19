@@ -43,15 +43,7 @@ module UglyTrivia
     end
 
     def was_correctly_answered
-      if player.in_penalty_box
-        winner = @penalty_box_behavior.answer_correctly player
-      else
-        puts "Answer was corrent!!!!"
-        player.increment_purse
-        puts "#{player.name} now has #{player.purse} Gold Coins."
-
-        winner = player.win?
-      end
+      winner = player.answer_correctly @penalty_box_behavior
       next_player
       return winner
     end
@@ -104,6 +96,17 @@ module UglyTrivia
       @in_penalty_box = penalty
       @purse = 0
       @category = 0
+    end
+
+    def answer_correctly(penalty_box_behavior)
+      if in_penalty_box
+        penalty_box_behavior.answer_correctly self
+      else
+        puts "Answer was corrent!!!!"
+        increment_purse
+        puts "#{name} now has #{purse} Gold Coins."
+        win?
+      end
     end
 
     def go_in_penalty_box; @in_penalty_box = true; end
