@@ -109,7 +109,7 @@ module UglyTrivia
   private
 
     def did_player_win
-      !(@players[@current_player].purse == 6)
+      @players[@current_player].win?
     end
 
     def next_player
@@ -167,6 +167,10 @@ module UglyTrivia
 
     def increment_purse
       @purse += 1
+    end
+
+    def win?
+      !(@purse == 6)
     end
   end
 end
