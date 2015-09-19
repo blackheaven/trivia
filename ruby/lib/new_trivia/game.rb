@@ -3,7 +3,6 @@ module UglyTrivia
     def  initialize
       @players = []
       @places = Array.new(6, 0)
-      @purses = Array.new(6, 0)
 
       @questions = QuestionStack.new([:pop, :science, :sports, :rock], 50)
 
@@ -19,7 +18,6 @@ module UglyTrivia
     def add(player_name)
       @players.push Player.new(player_name, @first_player)
       @first_player = false
-      @purses[how_many_players] = 0
 
       puts "#{player_name} was added"
       puts "They are player number #{how_many_players}"
@@ -77,8 +75,8 @@ module UglyTrivia
       if @players[@current_player].in_penalty_box
         if @is_getting_out_of_penalty_box
           puts 'Answer was correct!!!!'
-          @purses[@current_player] += 1
-          puts "#{@players[@current_player].name} now has #{@purses[@current_player]} Gold Coins."
+          @players[@current_player].increment_purse
+          puts "#{@players[@current_player].name} now has #{@players[@current_player].purse} Gold Coins."
 
           winner = did_player_win
           next_player
@@ -91,8 +89,8 @@ module UglyTrivia
       else
 
         puts "Answer was corrent!!!!"
-        @purses[@current_player] += 1
-        puts "#{@players[@current_player].name} now has #{@purses[@current_player]} Gold Coins."
+        @players[@current_player].increment_purse
+        puts "#{@players[@current_player].name} now has #{@players[@current_player].purse} Gold Coins."
 
         winner = did_player_win
         next_player
@@ -111,7 +109,7 @@ module UglyTrivia
   private
 
     def did_player_win
-      !(@purses[@current_player] == 6)
+      !(@players[@current_player].purse == 6)
     end
 
     def next_player
@@ -155,15 +153,20 @@ module UglyTrivia
   end
 
   class Player
-    attr_reader :name, :in_penalty_box
+    attr_reader :name, :in_penalty_box, :purse
 
     def initialize(n, penalty)
       @name = n
       @in_penalty_box = penalty
+      @purse = 0
     end
 
     def go_in_penalty_box
       @in_penalty_box = true
+    end
+
+    def increment_purse
+      @purse += 1
     end
   end
 end
