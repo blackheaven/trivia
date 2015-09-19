@@ -4,7 +4,7 @@ module UglyTrivia
       @questions = QuestionStack.new([:pop, :science, :sports, :rock], 50)
       @players = []
       @current_player = 0
-      @is_getting_out_of_penalty_box = false
+      @penalty_box_behavior = StayPenaltyBox.new
     end
 
     def is_playable?
@@ -27,10 +27,10 @@ module UglyTrivia
 
       if player.in_penalty_box
         if roll % 2 != 0
-          @is_getting_out_of_penalty_box = true
+          @penalty_box_behavior = QuitPenaltyBox.new
           puts "#{player.name} is getting out of the penalty box"
         else
-          @is_getting_out_of_penalty_box = false
+          @penalty_box_behavior = StayPenaltyBox.new
           puts "#{player.name} is not getting out of the penalty box"
           return
         end
@@ -44,20 +44,14 @@ module UglyTrivia
 
     def was_correctly_answered
       if player.in_penalty_box
-        if @is_getting_out_of_penalty_box
-          puts 'Answer was correct!!!!'
-        else
-          next_player
-          return true
-        end
-
+        winner = @penalty_box_behavior.answer_correctly player
       else
         puts "Answer was corrent!!!!"
-      end
-      player.increment_purse
-      puts "#{player.name} now has #{player.purse} Gold Coins."
+        player.increment_purse
+        puts "#{player.name} now has #{player.purse} Gold Coins."
 
-      winner = player.win?
+        winner = player.win?
+      end
       next_player
       return winner
     end
@@ -119,5 +113,20 @@ module UglyTrivia
     def win?; !(@purse == 6); end
 
     def change_category(questions, roll); @category = questions.change_category(@category, roll); end
+  end
+
+  class StayPenaltyBox
+    def answer_correctly(player)
+      true
+    end
+  end
+
+  class QuitPenaltyBox
+    def answer_correctly(player)
+      puts 'Answer was correct!!!!'
+      player.increment_purse
+      puts "#{player.name} now has #{player.purse} Gold Coins."
+      player.win?
+    end
   end
 end
