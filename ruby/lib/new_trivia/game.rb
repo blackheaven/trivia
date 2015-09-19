@@ -6,7 +6,6 @@ module UglyTrivia
 
       @current_player = 0
       @is_getting_out_of_penalty_box = false
-      @first_player = true
     end
 
     def is_playable?
@@ -14,8 +13,7 @@ module UglyTrivia
     end
 
     def add(player_name)
-      @players.push Player.new(player_name, @first_player)
-      @first_player = false
+      @players.push Player.new(player_name, 0 == how_many_players)
 
       puts "#{player_name} was added"
       puts "They are player number #{how_many_players}"
