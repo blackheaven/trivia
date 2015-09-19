@@ -14,7 +14,6 @@ module UglyTrivia
 
     def add(player_name)
       @players.push Player.new(player_name, 0 == how_many_players)
-
       puts "#{player_name} was added"
       puts "They are player number #{how_many_players}"
 
@@ -44,21 +43,6 @@ module UglyTrivia
       ask_question
     end
 
-  private
-
-    def ask_question
-      puts @questions.ask(player.category)
-    end
-
-    def change_category(roll)
-      player.change_category(@questions, roll)
-
-      puts "#{player.name}'s new location is #{player.category}"
-      puts "The category is #{@questions.get_category(player.category)}"
-    end
-
-  public
-
     def was_correctly_answered
       if player.in_penalty_box
         if @is_getting_out_of_penalty_box
@@ -70,7 +54,6 @@ module UglyTrivia
         end
 
       else
-
         puts "Answer was corrent!!!!"
         correct_answer
       end
@@ -85,6 +68,16 @@ module UglyTrivia
     end
 
   private
+
+    def ask_question
+      puts @questions.ask(player.category)
+    end
+
+    def change_category(roll)
+      player.change_category(@questions, roll)
+      puts "#{player.name}'s new location is #{player.category}"
+      puts "The category is #{@questions.get_category(player.category)}"
+    end
 
     def correct_answer
       player.increment_purse
