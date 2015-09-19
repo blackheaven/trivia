@@ -32,20 +32,16 @@ module UglyTrivia
       if player.in_penalty_box
         if roll % 2 != 0
           @is_getting_out_of_penalty_box = true
-
           puts "#{player.name} is getting out of the penalty box"
-          change_category(roll)
-          ask_question
         else
-          puts "#{player.name} is not getting out of the penalty box"
           @is_getting_out_of_penalty_box = false
+          puts "#{player.name} is not getting out of the penalty box"
+          return
         end
-
-      else
-
-        change_category(roll)
-        ask_question
       end
+
+      change_category(roll)
+      ask_question
     end
 
   private
