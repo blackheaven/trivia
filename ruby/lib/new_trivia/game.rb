@@ -32,18 +32,18 @@ module UglyTrivia
     end
 
     def roll(roll)
-      puts "#{@players[@current_player]} is the current player"
+      puts "#{@players[@current_player].name} is the current player"
       puts "They have rolled a #{roll}"
 
       if @in_penalty_box[@current_player]
         if roll % 2 != 0
           @is_getting_out_of_penalty_box = true
 
-          puts "#{@players[@current_player]} is getting out of the penalty box"
+          puts "#{@players[@current_player].name} is getting out of the penalty box"
           change_category(@current_player, roll)
           ask_question
         else
-          puts "#{@players[@current_player]} is not getting out of the penalty box"
+          puts "#{@players[@current_player].name} is not getting out of the penalty box"
           @is_getting_out_of_penalty_box = false
         end
 
@@ -67,7 +67,7 @@ module UglyTrivia
     def change_category(player, roll)
       @places[@current_player] = @questions.change_category(current_category, roll)
 
-      puts "#{@players[@current_player]}'s new location is #{current_category}"
+      puts "#{@players[@current_player].name}'s new location is #{current_category}"
       puts "The category is #{@questions.get_category(current_category)}"
     end
 
@@ -78,7 +78,7 @@ module UglyTrivia
         if @is_getting_out_of_penalty_box
           puts 'Answer was correct!!!!'
           @purses[@current_player] += 1
-          puts "#{@players[@current_player]} now has #{@purses[@current_player]} Gold Coins."
+          puts "#{@players[@current_player].name} now has #{@purses[@current_player]} Gold Coins."
 
           winner = did_player_win
           next_player
@@ -92,7 +92,7 @@ module UglyTrivia
 
         puts "Answer was corrent!!!!"
         @purses[@current_player] += 1
-        puts "#{@players[@current_player]} now has #{@purses[@current_player]} Gold Coins."
+        puts "#{@players[@current_player].name} now has #{@purses[@current_player]} Gold Coins."
 
         winner = did_player_win
         next_player
@@ -102,7 +102,7 @@ module UglyTrivia
 
     def wrong_answer
       puts 'Question was incorrectly answered'
-      puts "#{@players[@current_player]} was sent to the penalty box"
+      puts "#{@players[@current_player].name} was sent to the penalty box"
       @in_penalty_box[@current_player] = true
         next_player
       return true
@@ -159,10 +159,6 @@ module UglyTrivia
 
     def initialize(n)
       @name = n
-    end
-
-    def to_s
-      name
     end
   end
 end
