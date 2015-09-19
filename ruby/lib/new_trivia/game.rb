@@ -69,12 +69,7 @@ module UglyTrivia
       if player.in_penalty_box
         if @is_getting_out_of_penalty_box
           puts 'Answer was correct!!!!'
-          player.increment_purse
-          puts "#{player.name} now has #{player.purse} Gold Coins."
-
-          winner = player.win?
-          next_player
-          winner
+          correct_answer
         else
           next_player
           true
@@ -83,12 +78,7 @@ module UglyTrivia
       else
 
         puts "Answer was corrent!!!!"
-        player.increment_purse
-        puts "#{player.name} now has #{player.purse} Gold Coins."
-
-        winner = player.win?
-        next_player
-        return winner
+        correct_answer
       end
     end
 
@@ -101,6 +91,15 @@ module UglyTrivia
     end
 
   private
+
+    def correct_answer
+      player.increment_purse
+      puts "#{player.name} now has #{player.purse} Gold Coins."
+
+      winner = player.win?
+      next_player
+      return winner
+    end
 
     def player
       @players[@current_player]
