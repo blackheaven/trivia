@@ -4,12 +4,12 @@ module UglyTrivia
       @players = []
       @places = Array.new(6, 0)
       @purses = Array.new(6, 0)
-      @in_penalty_box = Array.new(6, 0)
 
       @questions = QuestionStack.new([:pop, :science, :sports, :rock], 50)
 
       @current_player = 0
       @is_getting_out_of_penalty_box = false
+      @first_player = true
     end
 
     def is_playable?
@@ -17,9 +17,9 @@ module UglyTrivia
     end
 
     def add(player_name)
-      @players.push Player.new(player_name)
+      @players.push Player.new(player_name, @first_player)
+      @first_player = false
       @purses[how_many_players] = 0
-      @in_penalty_box[how_many_players] = false
 
       puts "#{player_name} was added"
       puts "They are player number #{how_many_players}"
@@ -35,7 +35,7 @@ module UglyTrivia
       puts "#{@players[@current_player].name} is the current player"
       puts "They have rolled a #{roll}"
 
-      if @in_penalty_box[@current_player]
+      if @players[@current_player].in_penalty_box
         if roll % 2 != 0
           @is_getting_out_of_penalty_box = true
 
@@ -74,7 +74,7 @@ module UglyTrivia
   public
 
     def was_correctly_answered
-      if @in_penalty_box[@current_player]
+      if @players[@current_player].in_penalty_box
         if @is_getting_out_of_penalty_box
           puts 'Answer was correct!!!!'
           @purses[@current_player] += 1
@@ -103,8 +103,8 @@ module UglyTrivia
     def wrong_answer
       puts 'Question was incorrectly answered'
       puts "#{@players[@current_player].name} was sent to the penalty box"
-      @in_penalty_box[@current_player] = true
-        next_player
+      @players[@current_player].go_in_penalty_box
+      next_player
       return true
     end
 
@@ -155,10 +155,15 @@ module UglyTrivia
   end
 
   class Player
-    attr_reader :name
+    attr_reader :name, :in_penalty_box
 
-    def initialize(n)
+    def initialize(n, penalty)
       @name = n
+      @in_penalty_box = penalty
+    end
+
+    def go_in_penalty_box
+      @in_penalty_box = true
     end
   end
 end
