@@ -25,8 +25,9 @@ if i == s
 else
   print "Err\n"
   d = [0, (i-5)].max
-  (d..i).each do |line|
-    print "-" + old[line] + "\n"
-    print "+" + new[line] + "\n"
+  (d..(i-1)).each do |line|
+    print " " + new[line] + "\n"
   end
+  print "-" + old[i] + "\n"
+  print "+" + new[i] + "\n"
 end
