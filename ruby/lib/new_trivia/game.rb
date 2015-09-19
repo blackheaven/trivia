@@ -22,7 +22,7 @@ module UglyTrivia
       @in_penalty_box[how_many_players] = false
 
       puts "#{player_name} was added"
-      puts "They are player number #{@players.length}"
+      puts "They are player number #{how_many_players}"
 
       true
     end
@@ -81,13 +81,10 @@ module UglyTrivia
           puts "#{@players[@current_player]} now has #{@purses[@current_player]} Gold Coins."
 
           winner = did_player_win
-          @current_player += 1
-          @current_player = 0 if @current_player == @players.length
-
+          next_player
           winner
         else
-          @current_player += 1
-          @current_player = 0 if @current_player == @players.length
+          next_player
           true
         end
 
@@ -98,9 +95,7 @@ module UglyTrivia
         puts "#{@players[@current_player]} now has #{@purses[@current_player]} Gold Coins."
 
         winner = did_player_win
-        @current_player += 1
-        @current_player = 0 if @current_player == @players.length
-
+        next_player
         return winner
       end
     end
@@ -109,9 +104,7 @@ module UglyTrivia
       puts 'Question was incorrectly answered'
       puts "#{@players[@current_player]} was sent to the penalty box"
       @in_penalty_box[@current_player] = true
-
-      @current_player += 1
-      @current_player = 0 if @current_player == @players.length
+        next_player
       return true
     end
 
@@ -119,6 +112,10 @@ module UglyTrivia
 
     def did_player_win
       !(@purses[@current_player] == 6)
+    end
+
+    def next_player
+      @current_player = (@current_player + 1) % how_many_players
     end
   end
 
